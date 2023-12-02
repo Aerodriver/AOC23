@@ -10,6 +10,7 @@ const path = require("path");
 // What is the sum of all of the calibration values?
 const input1: string = "day1-input1.txt"; 
 const input2: string = input1;
+const pauluwuna:string = "realinput.txt";
 
 
 const filterNumsFromLine = (line: string): number => {
@@ -98,3 +99,4 @@ const trial2 = (filename: string): number => {
 };
 
 console.log("Solution 2",String(trial2(input2)))
+console.log("Solution 2",String(trial2(pauluwuna)))

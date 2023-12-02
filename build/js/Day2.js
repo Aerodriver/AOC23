@@ -26,18 +26,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const utils = __importStar(require("./utilitiy"));
 const input1 = "day2-input.txt";
 class Game {
-    constructor(id) {
+    constructor(id = 0) {
         this.id = id;
         this.bagSequence = [];
     }
-    addBagFromString(bag) {
+    addBagFromString(bagString) {
         const reg = (/\d+\sgreen|\d+\sred|\d+\sblue/g);
         let newbag = {
             blues: 0,
             greens: 0,
             reds: 0
         };
-        for (let found of bag.matchAll(reg)) {
+        for (let found of bagString.matchAll(reg)) {
             const currval = found[0];
             const stuff = currval.split(/\s/);
             switch (stuff[1]) {
@@ -57,7 +57,7 @@ class Game {
     addBag(bag) {
         this.bagSequence.push(bag);
     }
-    findeIfViolation(reds, greens, blues) {
+    findIfNoViolation(reds, greens, blues) {
         for (let bag of this.bagSequence) {
             if (bag.reds > reds || bag.greens > greens || bag.blues > blues) {
                 return 0;
@@ -86,24 +86,24 @@ const buildAGame = (line, id = 0) => {
 };
 function solve1() {
     const contents = utils.getFileLines(input1);
-    var count = 1;
-    var acc = 0;
+    let count = 1;
+    let acc = 0;
     contents.forEach((line) => {
         let g = buildAGame(line, count);
-        acc = acc + g.findeIfViolation(12, 13, 14);
+        acc = acc + g.findIfNoViolation(12, 13, 14);
         count = count + 1;
     });
     return acc;
 }
-console.log("Solution 1", solve1());
 function solve2() {
     const contents = utils.getFileLines(input1);
-    var acc = 0;
+    let acc = 0;
     contents.forEach((line) => {
         let g = buildAGame(line);
         acc = acc + g.findSmallestNeededCube().reduce((prev, curr) => prev * curr);
     });
     return acc;
 }
+console.log("Solution 1", solve1());
 console.log("Solution 2", solve2());
 //# sourceMappingURL=Day2.js.map

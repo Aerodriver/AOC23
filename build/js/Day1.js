@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require("path");
 const input1 = "day1-input1.txt";
 const input2 = input1;
+const pauluwuna = "realinput.txt";
 const filterNumsFromLine = (line) => {
     const numbers = line.matchAll(/[0-9]/g);
     const first = numbers.next().value;
@@ -73,4 +74,5 @@ const trial2 = (filename) => {
     return numbers.reduce((accumulator, curr) => Number(accumulator) + Number(curr));
 };
 console.log("Solution 2", String(trial2(input2)));
+console.log("Solution 2", String(trial2(pauluwuna)));
 //# sourceMappingURL=Day1.js.map

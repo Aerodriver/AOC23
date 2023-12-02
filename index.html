@@ -19,6 +19,7 @@
 
 <body>
 <h1>AOC 2023 --- Merry Christmas to all who see this </h1>
+
 <h2> Day 1</h2>
 <p>
 	First day of AOC, first day of trying out Typescript. 
@@ -35,11 +36,41 @@
 <p id="outd1.1"> Result for Part 1  will appear here</p>
 <p id="outd1.2"> Result for Part 2 will appear here</p>
 
-<script defer>
+<script id="Day1" defer>
+
 	const inputElement1 = document.getElementById("inputd1.1");
 	const outputElement1 = document.getElementById("outd1.1");
 	const outputElement2 = document.getElementById("outd1.2");
- 	// Stuff for part 1
+
+	inputElement1.addEventListener("change", solver2Day1, false);
+	function solver2Day1() {
+		let reader = new FileReader();
+		reader.onload = function () {
+			const arr = reader.result.split(/\r?\n/);
+			let numbers  = []
+			arr.forEach((line) => {
+				numbers.push(filterNumsFromLine2(line))
+			});
+			outputElement2.textContent = numbers.reduce( (accumulator, curr) => Number(accumulator) + Number(curr));
+            }
+			reader.readAsText(this.files[0]);
+	}
+
+	inputElement1.addEventListener("change", solver1Day1, false);
+	function solver1Day1() {
+		let reader = new FileReader();
+		reader.onload = function () {
+			const arr = reader.result.split(/\r?\n/);
+			let numbers  = []
+			arr.forEach((line) => {
+				numbers.push(filterNumsFromLine(line))
+			});
+			outputElement1.textContent = numbers.reduce( (accumulator, curr) => Number(accumulator) + Number(curr));
+            }
+			reader.readAsText(this.files[0]);
+	}
+
+	/*****************************************************************************/
 	const filterNumsFromLine = (line) => {
 		const numbers = line.matchAll(/[0-9]/g);
 		const first = numbers.next().value
@@ -54,73 +85,23 @@
 			return first+last
 		}
 	};
-	inputElement1.addEventListener("change", solver1Day1, false);
-	function solver1Day1() {
-		let reader = new FileReader();
-		reader.onload = function () {
-			//outputElement1.textContent = reader.result;
-			const arr = reader.result.split(/\r?\n/);
-			let numbers  = []
-			arr.forEach((line) => {
-				numbers.push(filterNumsFromLine(line))
-			});
-			outputElement1.textContent = numbers.reduce( (accumulator, curr) => Number(accumulator) + Number(curr));
-            }
-			reader.readAsText(this.files[0]);
-	}
 	//Stuff for part 2
-	const nameToNum = (name) =>{
-		switch (name){
-			case "on":
-				return "1";
-			case "tw":
-				return "2";
-			case "thr":
-				return "3";
-			case "four":
-				return "4"; 
-			case "fi":
-				return "5";
-			case "six":
-				return "6";
-			case "sev":
-				return "7";
-			case "eigh":
-				return "8";
-			case "ni":
-				return "9";
-			default:
-				return String(name);
-		}
-	}
 	const filterNumsFromLine2 = (line) => {
 		const numbers = line.matchAll(/[0-9]|on(?=e)|tw(?=o)|thr(?=ee)|four|fi(?=ve)|six|sev(?=en)|eigh(?=t)|ni(?=ne)/g);
+		const nameToNum = {"on":"1", "tw":"2", "thr":"3", "four":"4", "fi":"5", "six":"6", "sev":"7", "eigh":"8", "ni":"9"} 
+
 		const test = numbers.next().value
-		const first = nameToNum(test[0])
+		const first = (test[0] in nameToNum)? nameToNum[test[0]] : test[0];
 		const last = [...numbers].pop()
-			if(last === undefined){
+		
+		if(last === undefined){
 			return Number(first + first)
 		}
 		else {
-			return Number(first + nameToNum(last[0]))
+			const reallast = (last[0] in nameToNum)? nameToNum[last[0]] : last[0];
+			return Number(first + reallast)
 		}
 	};
-	inputElement1.addEventListener("change", solver2Day1, false);
-	function solver2Day1() {
-		let reader = new FileReader();
-		reader.onload = function () {
-			const arr = reader.result.split(/\r?\n/);
-			let numbers  = []
-			arr.forEach((line) => {
-				numbers.push(filterNumsFromLine2(line))
-			});
-			console.log(numbers)
-			outputElement2.textContent = numbers.reduce( (accumulator, curr) => Number(accumulator) + Number(curr));
-            }
-			reader.readAsText(this.files[0]);
-	}
-
-
 </script>
 
 <h2> Day 2 </h2>
@@ -129,7 +110,121 @@
 	 If I find the time I will make this webiste work as soemthing more than just a worse logbook; if I don't then I will just keep writing about my descent into madness induced by Typescript
 
 </p>
+</br>
+<p>Please insert a text file below to get the (hopefully correct) results</p>
+<input type="file" id="inputd2.1"/>
+<p id="outd2.1"> Result for Part 1  will appear here</p>
+<p id="outd2.2"> Result for Part 2 will appear here</p>
 
+<script id="Day2" >
+	const inputElementd2 = document.getElementById("inputd2.1");
+	const outputElementd2p1 = document.getElementById("outd2.1");
+	const outputElementd2p2 = document.getElementById("outd2.2");
+
+	inputElementd2.addEventListener("change", eventListenerDay2, false);
+	function eventListenerDay2() {
+		let reader = new FileReader();
+		reader.onload = function () {
+			const arr = reader.result.split(/\r?\n/);
+			outputElementd2p1.textContent = solve1(arr);
+			outputElementd2p2.textContent = solve2(arr);
+		}
+		reader.readAsText(this.files[0]);
+	}
+	/*****************************************************************************/
+	class Game {
+		id;
+		bagSequence;
+
+		constructor(id=0) {
+			this.id = id
+			this.bagSequence=[]
+		}
+
+		addBagFromString(bagString){
+			const reg=(/\d+\sgreen|\d+\sred|\d+\sblue/g);
+			let newbag = {
+				blues:0,
+				greens:0,
+				reds:0
+			}
+
+			for (let found of bagString.matchAll(reg)){
+				const currval = found[0]
+				const stuff = currval.split(/\s/)
+				switch(stuff[1]){
+					case "green":
+						newbag.greens=Number(stuff[0]);
+						continue;
+					case "red":
+						newbag.reds=Number(stuff[0]);
+						continue;
+					case "blue":
+						newbag.blues=Number(stuff[0]);
+						continue;
+				}
+			}
+			this.bagSequence.push(newbag)
+		}
+
+		addBag(bag){
+			this.bagSequence.push(bag)
+		}
+
+		findIfNoViolation(reds,greens,blues){
+			for (let bag of this.bagSequence){
+				if ( bag.reds>reds || bag.greens>greens || bag.blues>blues){
+					return 0
+				}
+			}
+			return this.id
+		}
+
+		findSmallestNeededCube(){
+			let mingreen=0
+			let minred=0
+			let minblue=0
+			for (let bag of this.bagSequence){
+				mingreen = mingreen<bag.greens? bag.greens: mingreen;
+				minred = minred<bag.reds? bag.reds: minred;
+				minblue = minblue<bag.blues? bag.blues: minblue;
+			}
+			return [mingreen,minblue,minred]
+		}
+	} 
+
+	const buildAGame = (line, id=0) => {
+		let g = new Game(id);
+		line.split(/:/)[1].trim().split(/;/).forEach((round)=>{
+			g.addBagFromString(round.trim())
+		})
+		return g
+	}
+	
+	function solve1(contents){
+		let count=1;
+		let acc=0;
+		contents.forEach(
+			(line) => {
+				let g = buildAGame(line, count)
+				acc = acc + g.findIfNoViolation(12,13,14)
+				count = count+1
+			}
+		)
+		return acc
+	}
+
+	function solve2(contents){
+		let acc=0
+		contents.forEach(
+			(line) => {
+				let g = buildAGame(line)
+				acc = acc + g.findSmallestNeededCube().reduce((prev, curr) => prev*curr)
+			}
+		)
+		return acc
+	}
+</script>
 
 
 </body>

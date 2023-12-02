@@ -8,16 +8,17 @@ type bag = {
 	reds:number;
 }
 
+
 class Game {
 	id:number;
 	bagSequence:bag[];
 
-	constructor(id:number) {
+	constructor(id=0) {
 		this.id = id
 		this.bagSequence=[]
 	}
 
-	addBagFromString(bag:string):void{
+	addBagFromString(bagString:string):void{
 		const reg=(/\d+\sgreen|\d+\sred|\d+\sblue/g);
 		let newbag:bag = {
 			blues:0,
@@ -25,7 +26,7 @@ class Game {
 			reds:0
 		}
 
-		for (let found of bag.matchAll(reg)){
+		for (let found of bagString.matchAll(reg)){
 			const currval = found[0]
 			const stuff = currval.split(/\s/)
 			switch(stuff[1]){
@@ -47,7 +48,7 @@ class Game {
 		this.bagSequence.push(bag)
 	}
 
-	findeIfViolation(reds:number,greens:number,blues:number):number{
+	findIfNoViolation(reds:number,greens:number,blues:number):number{
 		for (let bag of this.bagSequence){
 			if ( bag.reds>reds || bag.greens>greens || bag.blues>blues){
 				return 0
@@ -67,7 +68,6 @@ class Game {
 		}
 		return [mingreen,minblue,minred]
 	}
-
 } 
 
 const buildAGame = (line:string, id=0):Game => {
@@ -80,24 +80,21 @@ const buildAGame = (line:string, id=0):Game => {
 
 function solve1(){
 	const contents = utils.getFileLines(input1);
-	var count=1;
-	var acc=0;
+	let count=1;
+	let acc=0;
 	contents.forEach(
 		(line:string) => {
 			let g = buildAGame(line, count)
-			acc = acc + g.findeIfViolation(12,13,14)
+			acc = acc + g.findIfNoViolation(12,13,14)
 			count = count+1
 		}
 	)
 	return acc
 }
 
-console.log("Solution 1",solve1())
-
-
 function solve2(){
 	const contents = utils.getFileLines(input1)
-	var acc=0
+	let acc=0
 	contents.forEach(
 		(line:string) => {
 			let g = buildAGame(line)
@@ -107,4 +104,5 @@ function solve2(){
 	return acc
 }
 
+console.log("Solution 1",solve1())
 console.log("Solution 2", solve2())
