@@ -20,6 +20,9 @@
 <body>
 <h1>AOC 2023 --- Merry Christmas to all who see this </h1>
 
+<p> This is a "website" for the <a href="https://adventofcode.com/2023">AOC</a> and also a) a logbook of how I went mad and b) something for me to easily test other people inputs after I solved the daily task.</p>
+<p>The code for this website and my attempts at writing Typescript can be found at the <a href="https://github.com/Aerodriver/AOC23/tree/master">git repository</a>.</p>
+
 <h2> Day 1</h2>
 <p>
 	First day of AOC, first day of trying out Typescript. 
@@ -30,7 +33,6 @@
 	I resorted to using lookaheads and only match the parts that can't be part of an overlap, resulting in matches like "nin".
 	While not great, it worked and Day 1 ended without me murdering someone.
 </p>
-</br>
 <p>Please insert a text file below to get the (hopefully correct) results</p>
 <input type="file" name="inputfile" id="inputd1.1"/>
 <p id="outd1.1"> Result for Part 1  will appear here</p>
@@ -103,14 +105,21 @@
 		}
 	};
 </script>
+</br>
 
 <h2> Day 2 </h2>
 <p>
 	Second Day.
-	 If I find the time I will make this webiste work as soemthing more than just a worse logbook; if I don't then I will just keep writing about my descent into madness induced by Typescript
-
+	If I find the time I will make this website work as something more than just a worse logbook; if I don't then I will just keep writing about my descent into madness induced by Typescript
+	So while getting Typescript stuff to automaticly be put into here did not work out without havning to put thought into it, I decided to simply put the equivalent JavaScript as script tags in here.
+	Now this html file can be used standalone without a server or whatnot.
 </p>
-</br>
+<p>
+	This day was way easier than day 1, so I got to look at how classes work (at a basic level, polymorphism might come in play in the future) and even use a custom type.
+	I am still handling parsing with regex and dread the day where this won't be enough for a task.
+	The first part took me the longest (the second was just "search for the max number in a game for every color") because I did not read the task right and initially used a wrong regex for parsing (did not account for double digits xD).
+	So far this is more an intro to JS than an intro to TS, but we will se where the journey goes.
+</p>
 <p>Please insert a text file below to get the (hopefully correct) results</p>
 <input type="file" id="inputd2.1"/>
 <p id="outd2.1"> Result for Part 1  will appear here</p>
@@ -225,7 +234,9 @@
 		return acc
 	}
 </script>
+</br>
 
+<h2> Day 3 </h2>
 
 </body>
 </html>
