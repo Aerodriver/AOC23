@@ -1,16 +1,10 @@
-//import * as fs from 'fs'
-//import * as path from "path"
-
-declare var require: any
-const fs = require('fs');
-const path = require("path");
+import * as utils from "./utilitiy"
 
 // Part 1
 // for every line in the input take the first and last digit and thats your number
 // What is the sum of all of the calibration values?
 const input1: string = "day1-input1.txt"; 
 const input2: string = input1;
-const pauluwuna:string = "realinput.txt";
 
 
 const filterNumsFromLine = (line: string): number => {
@@ -31,10 +25,8 @@ const filterNumsFromLine = (line: string): number => {
 const trial1 = (filename: string): number => {
 	// read file
 	//const fileReader = new FileReader();
-	
-	const contents = fs.readFileSync(path.join('C:\\Users\\giesb\\Desktop\\AOC23\\src', filename), 'utf-8');
-	//split lines
-	const arr = contents.split(/\r?\n/);
+
+	const arr = utils.getFileLines(filename)
 	let numbers : number[] = []
 	//filter the relevant number from each line
 	arr.forEach((line:string) => {
@@ -89,8 +81,7 @@ const filterNumsFromLine2 = (line: string): number => {
 };
 
 const trial2 = (filename: string): number => {
-	const contents = fs.readFileSync(path.join('C:\\Users\\giesb\\Desktop\\AOC23\\src', filename), 'utf-8');
-	const arr = contents.split(/\r?\n/);
+	const arr = utils.getFileLines(filename)
 	let numbers : number[] = []
 	arr.forEach((line:string) => {
 		numbers.push(filterNumsFromLine2(line))
@@ -99,4 +90,3 @@ const trial2 = (filename: string): number => {
 };
 
 console.log("Solution 2",String(trial2(input2)))
-console.log("Solution 2",String(trial2(pauluwuna)))
