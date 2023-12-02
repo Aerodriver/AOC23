@@ -1,9 +1,9 @@
-import * as fs from 'fs'
-import * as path from "path"
+//import * as fs from 'fs'
+//import * as path from "path"
 
-//declare var require: any
-//const fs = require('fs');
-//const path = require("path");
+declare var require: any
+const fs = require('fs');
+const path = require("path");
 
 // Part 1
 // for every line in the input take the first and last digit and thats your number

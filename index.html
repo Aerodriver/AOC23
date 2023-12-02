@@ -18,14 +18,117 @@
 </head>
 
 <body>
-<h1>AOC 2023 Merry Christmas to all who visit</h1>
+<h1>AOC 2023 --- Merry Christmas to all who see this </h1>
 <h2> Day 1</h2>
 <p>
-	First day of AOC, first day of trying out Typescript
+	First day of AOC, first day of trying out Typescript. 
+	After getting things to run locally and wrestling with the question "are those additions or string concats that I am doing?", part 1 was easy.
+	Then Part 2 put me in a temporary stasis.
+	Because my initial solution was based on a regular expression I had to do some thinking.
+	Now some of the words I was looking for could overlap and normally regex consumes the matches, so that overlapping numbers would not be detected.
+	I resorted to using lookaheads and only match the parts that can't be part of an overlap, resulting in matches like "nin".
+	While not great, it worked and Day 1 ended without me murdering someone.
 </p>
-<script src="./build/js/Day1.js" defer></script>
-<button id="button" type="button" onclick="solve1()">Solve</button>
-<p id="tag1.1"> Click the Button to see the solution for input 1</p>
+</br>
+<p>Please insert a text file below to get the (hopefully correct) results</p>
+<input type="file" name="inputfile" id="inputd1.1"/>
+<p id="outd1.1"> Result for Part 1  will appear here</p>
+<p id="outd1.2"> Result for Part 2 will appear here</p>
+
+<script defer>
+	const inputElement1 = document.getElementById("inputd1.1");
+	const outputElement1 = document.getElementById("outd1.1");
+	const outputElement2 = document.getElementById("outd1.2");
+ 	// Stuff for part 1
+	const filterNumsFromLine = (line) => {
+		const numbers = line.matchAll(/[0-9]/g);
+		const first = numbers.next().value
+		const last = [...Array.from(numbers)].pop()
+		if( first == 0){
+			console.log(line)
+		}
+		if(last === undefined){
+			return first+first
+		}
+		else {
+			return first+last
+		}
+	};
+	inputElement1.addEventListener("change", solver1Day1, false);
+	function solver1Day1() {
+		let reader = new FileReader();
+		reader.onload = function () {
+			//outputElement1.textContent = reader.result;
+			const arr = reader.result.split(/\r?\n/);
+			let numbers  = []
+			arr.forEach((line) => {
+				numbers.push(filterNumsFromLine(line))
+			});
+			outputElement1.textContent = numbers.reduce( (accumulator, curr) => Number(accumulator) + Number(curr));
+            }
+			reader.readAsText(this.files[0]);
+	}
+	//Stuff for part 2
+	const nameToNum = (name) =>{
+		switch (name){
+			case "on":
+				return "1";
+			case "tw":
+				return "2";
+			case "thr":
+				return "3";
+			case "four":
+				return "4"; 
+			case "fi":
+				return "5";
+			case "six":
+				return "6";
+			case "sev":
+				return "7";
+			case "eigh":
+				return "8";
+			case "ni":
+				return "9";
+			default:
+				return String(name);
+		}
+	}
+	const filterNumsFromLine2 = (line) => {
+		const numbers = line.matchAll(/[0-9]|on(?=e)|tw(?=o)|thr(?=ee)|four|fi(?=ve)|six|sev(?=en)|eigh(?=t)|ni(?=ne)/g);
+		const test = numbers.next().value
+		const first = nameToNum(test[0])
+		const last = [...numbers].pop()
+			if(last === undefined){
+			return Number(first + first)
+		}
+		else {
+			return Number(first + nameToNum(last[0]))
+		}
+	};
+	inputElement1.addEventListener("change", solver2Day1, false);
+	function solver2Day1() {
+		let reader = new FileReader();
+		reader.onload = function () {
+			const arr = reader.result.split(/\r?\n/);
+			let numbers  = []
+			arr.forEach((line) => {
+				numbers.push(filterNumsFromLine2(line))
+			});
+			console.log(numbers)
+			outputElement2.textContent = numbers.reduce( (accumulator, curr) => Number(accumulator) + Number(curr));
+            }
+			reader.readAsText(this.files[0]);
+	}
+
+
+</script>
+
+<h2> Day 2 </h2>
+<p>
+	Second Day.
+	 If I find the time I will make this webiste work as soemthing more than just a worse logbook; if I don't then I will just keep writing about my descent into madness induced by Typescript
+
+</p>
 
 
 
