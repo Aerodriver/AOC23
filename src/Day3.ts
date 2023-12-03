@@ -147,5 +147,5 @@ function solver2(lines:string[]):number{
 const contents = utils.getFileLines(input)
 const test= utils.getFileLines(testinput)
 
-console.log("Solution 1", solver1(test))
-console.log("Solution 2", solver2(test))
+console.log("Solution 1", solver1(contents))
+console.log("Solution 2", solver2(contents))
