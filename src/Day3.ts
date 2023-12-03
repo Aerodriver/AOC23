@@ -79,7 +79,12 @@ function solver1(lines:string[]):number{
 		);
 	}
 
-	return [...numsPos].map((e)=>{ return e.linepositions.actualNum}).reduce( (a,b) => {return a+b} );
+	return[...new Set([...numsPos]
+			.map((item):string => 
+				item.linepositions.actualNum +"|"+ item.linenum +"|"+ item.linepositions.begin +"|"+ item.linepositions.end))]
+		.map((str:string):number=> 
+			Number(str.match(/\d+/)))
+		.reduce( (a,b) => a+b )
 }
 
 function solver2(lines:string[]):number{
@@ -148,4 +153,6 @@ const contents = utils.getFileLines(input)
 const test= utils.getFileLines(testinput)
 
 console.log("Solution 1", solver1(contents))
+console.log("Solution 1", solver1(test))
+
 console.log("Solution 2", solver2(contents))

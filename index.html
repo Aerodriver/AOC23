@@ -297,7 +297,10 @@
 				}
 			});
 		}
-		return [...numsPos].map((e) => { return e.linepositions.actualNum; }).reduce((a, b) => { return a + b; });
+		return [...new Set([...numsPos]
+				.map((item) => item.linepositions.actualNum + "|" + item.linenum + "|" + item.linepositions.begin + "|" + item.linepositions.end))]
+			.map((str) => Number(str.match(/\d+/)))
+			.reduce((a, b) => a + b);
 	}
 	function solverd3p2(lines) {
 		let numsPos = new Set();
