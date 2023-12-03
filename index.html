@@ -51,23 +51,15 @@
 			const arr = reader.result.split(/\r?\n/);
 			let numbers  = []
 			arr.forEach((line) => {
-				numbers.push(filterNumsFromLine2(line))
-			});
-			outputElement2.textContent = numbers.reduce( (accumulator, curr) => Number(accumulator) + Number(curr));
-            }
-			reader.readAsText(this.files[0]);
-	}
-
-	inputElement1.addEventListener("change", solver1Day1, false);
-	function solver1Day1() {
-		let reader = new FileReader();
-		reader.onload = function () {
-			const arr = reader.result.split(/\r?\n/);
-			let numbers  = []
-			arr.forEach((line) => {
 				numbers.push(filterNumsFromLine(line))
 			});
 			outputElement1.textContent = numbers.reduce( (accumulator, curr) => Number(accumulator) + Number(curr));
+			numbers  = []
+			arr.forEach((line) => {
+				numbers.push(filterNumsFromLine2(line))
+			});
+			outputElement2.textContent = numbers.reduce( (accumulator, curr) => Number(accumulator) + Number(curr));
+
             }
 			reader.readAsText(this.files[0]);
 	}
@@ -237,6 +229,125 @@
 </br>
 
 <h2> Day 3 </h2>
+<p>
+	I tried using type aliases and made many mistakes like expecting a Map to be capable of taking more than just one simple value as a key (for example a pair of two numbers).
+	My first idea was to scan the lines in a very stupid way, what I came up with later is not much more intelligent but it is shorter.
+	It feels like not using type aliases would have made things easier; also my python "everything has to be done functionally and on a list" mentality keeps haunting me.
+	I still did not look into automatically putting the finished Javscript in here so copy and paste has to be enough.
+	My biggest fear right now is that I did not see some edge case where my code would break however as it gave me the correct results, I am somewhat optimistic.
+	One thing which thankfully wasn't a problem, where numbers that had two gears connect them, but I still think that my code might take a number more than once in some case.
+</p>
+
+<p>Please insert a text file below to get the (hopefully correct) results</p>
+<input type="file" id="inputd3.1"/>
+<p id="outd3.1"> Result for Part 1  will appear here</p>
+<p id="outd3.2"> Result for Part 2 will appear here</p>
+
+<script id="Day3" defer>
+	const inputElementd3 = document.getElementById("inputd3.1");
+	const outputElementd3p1 = document.getElementById("outd3.1");
+	const outputElementd3p2 = document.getElementById("outd3.2");
+
+	inputElementd3.addEventListener("change", eventListenerDay3, false);
+	function eventListenerDay3() {
+		let reader = new FileReader();
+		reader.onload = function () {
+			const arr = reader.result.split(/\r?\n/);
+			outputElementd3p1.textContent = solverd3p1(arr);
+			outputElementd3p2.textContent = solverd3p2(arr);
+		}
+		reader.readAsText(this.files[0]);
+	}
+	/*****************************************************************************/
+
+
+	const input = "day3-input.txt";
+	const testinput = "day3-test.txt";
+	function elemToNumpos(elem) {
+		return { actualNum: Number(elem[0]), begin: Number(elem["index"]), end: Number(elem["index"]) + elem[0].length - 1 };
+	}
+	function solverd3p1(lines) {
+		let numsPos = new Set();
+		const regNum = /\d+/g;
+		const regSym = /[^\d\.]/g;
+		for (let linenumber = 1; linenumber < lines.length; linenumber = linenumber + 1) {
+			const scan1 = lines[linenumber - 1];
+			const scan2 = lines[linenumber];
+			const nums1 = [...scan1.matchAll(regNum)].map((elem) => { return elemToNumpos(elem); });
+			const syms1 = [...scan1.matchAll(regSym)].map((elem) => { return { position: Number(elem["index"]) }; });
+			const nums2 = [...scan2.matchAll(regNum)].map((elem) => { return elemToNumpos(elem); });
+			const syms2 = [...scan2.matchAll(regSym)].map((elem) => { return { position: Number(elem["index"]) }; });
+			syms1.forEach((sp) => {
+				for (let num of nums2) {
+					if (sp.position >= num.begin - 1 && sp.position <= num.end + 1) {
+						numsPos.add({ linenum: linenumber, linepositions: num });
+					}
+				}
+				for (let num of nums1) {
+					if (sp.position == num.end + 1 || sp.position == num.begin - 1) {
+						numsPos.add({ linenum: linenumber - 1, linepositions: num });
+					}
+				}
+			});
+			syms2.forEach((sp) => {
+				for (let num of nums1) {
+					if (sp.position >= num.begin - 1 && sp.position <= num.end + 1) {
+						numsPos.add({ linenum: linenumber - 1, linepositions: num });
+					}
+				}
+			});
+		}
+		return [...numsPos].map((e) => { return e.linepositions.actualNum; }).reduce((a, b) => { return a + b; });
+	}
+	function solverd3p2(lines) {
+		let numsPos = new Set();
+		const regNum = /\d+/g;
+		const regGear = /\*/g;
+		for (let linenumber = 1; linenumber < lines.length; linenumber = linenumber + 1) {
+			const scan1 = lines[linenumber - 1];
+			const scan2 = lines[linenumber];
+			const nums1 = [...scan1.matchAll(regNum)].map((elem) => { return elemToNumpos(elem); });
+			const gear1 = [...scan1.matchAll(regGear)].map((elem) => { return { gearposition: Number(elem["index"]), gearlinenum: linenumber - 1 }; });
+			const nums2 = [...scan2.matchAll(regNum)].map((elem) => { return elemToNumpos(elem); });
+			const gear2 = [...scan2.matchAll(regGear)].map((elem) => { return { gearposition: Number(elem["index"]), gearlinenum: linenumber }; });
+			gear1.forEach((sp) => {
+				for (let num of nums2) {
+					if (sp.gearposition >= num.begin - 1 && sp.gearposition <= num.end + 1) {
+						numsPos.add({ linenum: linenumber, linepositions: Object.assign(Object.assign({}, num), sp) });
+					}
+				}
+				for (let num of nums1) {
+					if (sp.gearposition == num.end + 1 || sp.gearposition == num.begin - 1) {
+						numsPos.add({ linenum: linenumber - 1, linepositions: Object.assign(Object.assign({}, num), sp) });
+					}
+				}
+			});
+			gear2.forEach((sp) => {
+				for (let num of nums1) {
+					if (sp.gearposition >= num.begin - 1 && sp.gearposition <= num.end + 1) {
+						numsPos.add({ linenum: linenumber - 1, linepositions: Object.assign(Object.assign({}, num), sp) });
+					}
+				}
+			});
+		}
+		let gearmap = new Map();
+		const bullshit = (a, b) => { return a + '|' + b; };
+		for (let l of [...numsPos]) {
+			const key = bullshit(l.linepositions.gearlinenum, l.linepositions.gearposition);
+			if (gearmap.has(key)) {
+				gearmap.get(key).push(l.linepositions.actualNum);
+			}
+			else {
+				gearmap.set(key, [l.linepositions.actualNum]);
+			}
+		}
+		return [...gearmap].map((el) => el[1].length == 2 ? el[1].reduce((a, b) => a * b) : 0).reduce((a, b) => a + b);
+	}
+</script>
+
+<br/>
+<h2> Day 4 </h2>
+
 
 </body>
 </html>
