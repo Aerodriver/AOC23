@@ -22,7 +22,7 @@ const filterNumsFromLine = (line: string): number => {
 	}
 };
 
-const trial1 = (filename: string): number => {
+const solver1 = (filename: string): number => {
 	// read file
 	//const fileReader = new FileReader();
 
@@ -36,7 +36,7 @@ const trial1 = (filename: string): number => {
 	return numbers.reduce( (accumulator, curr) => Number(accumulator) + Number(curr));
 };
 
-console.log("Solution 1",String(trial1(input1)))
+console.log("Solution 1",String(solver1(input1)))
 
 
 /*** Part 2 ***/
@@ -80,7 +80,7 @@ const filterNumsFromLine2 = (line: string): number => {
 	}
 };
 
-const trial2 = (filename: string): number => {
+const solver2 = (filename: string): number => {
 	const arr = utils.getFileLines(filename)
 	let numbers : number[] = []
 	arr.forEach((line:string) => {
@@ -89,4 +89,4 @@ const trial2 = (filename: string): number => {
 	return numbers.reduce( (accumulator, curr) => Number(accumulator) + Number(curr));
 };
 
-console.log("Solution 2",String(trial2(input2)))
+console.log("Solution 2",String(solver2(input2)))

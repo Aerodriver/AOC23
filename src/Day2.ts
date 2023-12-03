@@ -78,7 +78,7 @@ const buildAGame = (line:string, id=0):Game => {
 	return g
 }
 
-function solve1(){
+function solver1(){
 	const contents = utils.getFileLines(input1);
 	let count=1;
 	let acc=0;
@@ -92,7 +92,7 @@ function solve1(){
 	return acc
 }
 
-function solve2(){
+function solver2(){
 	const contents = utils.getFileLines(input1)
 	let acc=0
 	contents.forEach(
@@ -104,5 +104,5 @@ function solve2(){
 	return acc
 }
 
-console.log("Solution 1",solve1())
-console.log("Solution 2", solve2())
+console.log("Solution 1",solver1())
+console.log("Solution 2", solver2())
