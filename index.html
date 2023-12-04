@@ -351,7 +351,75 @@
 
 <br/>
 <h2> Day 4 </h2>
+<p>
+	Probably the easiest day so far. 
+	If it where not for my inability to get the correct indexes in Part 2 this would have taken less time than it did.
+	I also startet to add some dumb versions for things like a map or a set; they internally just use a map or set where things are stringified but with this I can use them in the future without having to think about stuff like Set(2) {[name,1], [name,1]} again.
+	Only thing that gives me a headache at the moment are iterables in those dumb classes but so far it seems to work(?).
+</p>
 
+<p>Please insert a text file below to get the (hopefully correct) results</p>
+<input type="file" id="inputd4.1"/>
+<p id="outd4.1"> Result for Part 1  will appear here</p>
+<p id="outd4.2"> Result for Part 2 will appear here</p>
+
+<script id="Day4" defer>
+	const inputElementd4 = document.getElementById("inputd4.1");
+	const outputElementd4p1 = document.getElementById("outd4.1");
+	const outputElementd4p2 = document.getElementById("outd4.2");
+
+	inputElementd4.addEventListener("change", eventListenerDay4, false);
+	function eventListenerDay4() {
+		let reader = new FileReader();
+		reader.onload = function () {
+			const arr = reader.result.split(/\r?\n/);
+			outputElementd4p1.textContent = solverd4p1(arr);
+			outputElementd4p2.textContent = solverd4p2(arr);
+		}
+		reader.readAsText(this.files[0]);
+	}
+	/*****************************************************************************/
+
+	function numberOfWinningNumbers(line) {
+		var _a;
+		const reg = /(?<winnums>(\d+|\s)+)\|(?<mynums>(\d+|\s)+)/;
+		const numreg = /\d+/g;
+		let groups = (_a = line.match(reg)) === null || _a === void 0 ? void 0 : _a.groups;
+		if (groups) {
+			const win = new Set([...groups["winnums"].matchAll(numreg)].map((e) => Number(e)));
+			const my = new Set([...groups["mynums"].matchAll(numreg)].map((e) => Number(e)));
+			return (([...win].filter(x => my.has(x)).length));
+		}
+		return 0;
+	}
+	function solverd4p1(lines) {
+		const pointCalc = (num) => num > 0 ? Math.pow(2, num - 1) : 0;
+		const points = [];
+		for (let line of lines) {
+			points.push(numberOfWinningNumbers(line));
+		}
+		return points.reduce((acc, curr) => acc + pointCalc(curr), 0);
+	}
+	function solverd4p2(lines) {
+		const card_repeat = new Map();
+		for (let e of lines.entries()) {
+			if (!card_repeat.has(e[0])) {
+				card_repeat.set(e[0], 1);
+			}
+			const how_often_to_count_card = card_repeat.get(e[0]);
+			const numofwinnum = numberOfWinningNumbers(e[1]);
+			for (let i of [...Array(numofwinnum).keys()]) {
+				if (card_repeat.has(e[0] + i + 1)) {
+					card_repeat.set(e[0] + i + 1, card_repeat.get(e[0] + i + 1) + how_often_to_count_card);
+				}
+				else {
+					card_repeat.set(e[0] + i + 1, how_often_to_count_card + 1);
+				}
+			}
+		}
+		return [...card_repeat.values()].reduce((a, b) => a + b);
+	}
+</script>
 
 </body>
 </html>
