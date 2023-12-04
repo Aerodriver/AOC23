@@ -21,10 +21,8 @@ class DumbMap<K,V> extends Map{
 	}
 
 	
-	*[Symbol.iterator]() {
-		for(let [k,v] of this.inter_map.entries()){
-			yield JSON.parse(k),v;
-		}
+	[Symbol.iterator]() {
+		return this.entries()
 	}
 
 	set(key: K, value:V) {
@@ -114,6 +112,12 @@ function test(){
 	//ma.forEach((a,b)=> console.log(a+b  ))
 	console.log([...t])
 	console.log(t.keys())
+	let keys = t.keys()
+	let mk = ma.keys()
+	console.log([...keys])
+	console.log([...keys])
+	console.log([...mk])
+	console.log([...mk])
 	console.log(ma.keys())
 	t.forEach((a,b)=> console.log( b[1]+a) )
 
@@ -144,4 +148,4 @@ function test(){
 	  }
 }
 
-test()
+//test()
