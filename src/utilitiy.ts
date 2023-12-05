@@ -12,7 +12,7 @@ export const getFileLines = (filename: string, directory = taskdir): string[] =>
 	return arr
 };
 
-export const getFileAsString = (filename: string, directory = taskdir): string[] => {
+export const getFileAsString = (filename: string, directory = taskdir): string => {
 	return fs.readFileSync(path.join(directory, filename), 'utf-8');
 };
 
