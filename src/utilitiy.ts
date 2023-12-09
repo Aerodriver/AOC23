@@ -16,6 +16,22 @@ export const getFileAsString = (filename: string, directory = taskdir): string =
 	return fs.readFileSync(path.join(directory, filename), 'utf-8');
 };
 
+export function gcd(a:number, b:number){
+	let li = [a,b]
+	while(!(li[1]===0)){
+		const tmp = li[0]
+		const na = li[1]
+		const nb = tmp % li[1]
+		li = [na,nb]
+	}
+	console.log(li)
+	return li[0]
+}
+
+export function lcm (a:number, b:number):number {
+	return a/gcd(a,b)*b
+} 
+
 
 class DumbMap<K,V> extends Map{
 	private inter_map:Map<string, V> ;

@@ -42,65 +42,7 @@
 <p id="outd1.1"> Result for Part 1  will appear here</p>
 <p id="outd1.2"> Result for Part 2 will appear here</p>
 
-<script id="Day1" defer>
-
-	const inputElement1 = document.getElementById("inputd1.1");
-	const outputElement1 = document.getElementById("outd1.1");
-	const outputElement2 = document.getElementById("outd1.2");
-
-	inputElement1.addEventListener("change", solver2Day1, false);
-	function solver2Day1() {
-		let reader = new FileReader();
-		reader.onload = function () {
-			const arr = reader.result.split(/\r?\n/);
-			let numbers  = []
-			arr.forEach((line) => {
-				numbers.push(filterNumsFromLine(line))
-			});
-			outputElement1.textContent = numbers.reduce( (accumulator, curr) => Number(accumulator) + Number(curr));
-			numbers  = []
-			arr.forEach((line) => {
-				numbers.push(filterNumsFromLine2(line))
-			});
-			outputElement2.textContent = numbers.reduce( (accumulator, curr) => Number(accumulator) + Number(curr));
-
-            }
-			reader.readAsText(this.files[0]);
-	}
-
-	/*****************************************************************************/
-	const filterNumsFromLine = (line) => {
-		const numbers = line.matchAll(/[0-9]/g);
-		const first = numbers.next().value
-		const last = [...Array.from(numbers)].pop()
-		if( first == 0){
-			console.log(line)
-		}
-		if(last === undefined){
-			return first+first
-		}
-		else {
-			return first+last
-		}
-	};
-	//Stuff for part 2
-	const filterNumsFromLine2 = (line) => {
-		const numbers = line.matchAll(/[0-9]|on(?=e)|tw(?=o)|thr(?=ee)|four|fi(?=ve)|six|sev(?=en)|eigh(?=t)|ni(?=ne)/g);
-		const nameToNum = {"on":"1", "tw":"2", "thr":"3", "four":"4", "fi":"5", "six":"6", "sev":"7", "eigh":"8", "ni":"9"} 
-
-		const test = numbers.next().value
-		const first = (test[0] in nameToNum)? nameToNum[test[0]] : test[0];
-		const last = [...numbers].pop()
-		
-		if(last === undefined){
-			return Number(first + first)
-		}
-		else {
-			const reallast = (last[0] in nameToNum)? nameToNum[last[0]] : last[0];
-			return Number(first + reallast)
-		}
-	};
-</script>
+<script id="Day1" defer src="websitescripts/day1.js"></script>
 </br>
 
 <h2> Day 2 </h2>
@@ -121,115 +63,7 @@
 <p id="outd2.1"> Result for Part 1  will appear here</p>
 <p id="outd2.2"> Result for Part 2 will appear here</p>
 
-<script id="Day2" >
-	const inputElementd2 = document.getElementById("inputd2.1");
-	const outputElementd2p1 = document.getElementById("outd2.1");
-	const outputElementd2p2 = document.getElementById("outd2.2");
-
-	inputElementd2.addEventListener("change", eventListenerDay2, false);
-	function eventListenerDay2() {
-		let reader = new FileReader();
-		reader.onload = function () {
-			const arr = reader.result.split(/\r?\n/);
-			outputElementd2p1.textContent = solve1(arr);
-			outputElementd2p2.textContent = solve2(arr);
-		}
-		reader.readAsText(this.files[0]);
-	}
-	/*****************************************************************************/
-	class Game {
-		id;
-		bagSequence;
-
-		constructor(id=0) {
-			this.id = id
-			this.bagSequence=[]
-		}
-
-		addBagFromString(bagString){
-			const reg=(/\d+\sgreen|\d+\sred|\d+\sblue/g);
-			let newbag = {
-				blues:0,
-				greens:0,
-				reds:0
-			}
-
-			for (let found of bagString.matchAll(reg)){
-				const currval = found[0]
-				const stuff = currval.split(/\s/)
-				switch(stuff[1]){
-					case "green":
-						newbag.greens=Number(stuff[0]);
-						continue;
-					case "red":
-						newbag.reds=Number(stuff[0]);
-						continue;
-					case "blue":
-						newbag.blues=Number(stuff[0]);
-						continue;
-				}
-			}
-			this.bagSequence.push(newbag)
-		}
-
-		addBag(bag){
-			this.bagSequence.push(bag)
-		}
-
-		findIfNoViolation(reds,greens,blues){
-			for (let bag of this.bagSequence){
-				if ( bag.reds>reds || bag.greens>greens || bag.blues>blues){
-					return 0
-				}
-			}
-			return this.id
-		}
-
-		findSmallestNeededCube(){
-			let mingreen=0
-			let minred=0
-			let minblue=0
-			for (let bag of this.bagSequence){
-				mingreen = mingreen<bag.greens? bag.greens: mingreen;
-				minred = minred<bag.reds? bag.reds: minred;
-				minblue = minblue<bag.blues? bag.blues: minblue;
-			}
-			return [mingreen,minblue,minred]
-		}
-	} 
-
-	const buildAGame = (line, id=0) => {
-		let g = new Game(id);
-		line.split(/:/)[1].trim().split(/;/).forEach((round)=>{
-			g.addBagFromString(round.trim())
-		})
-		return g
-	}
-	
-	function solve1(contents){
-		let count=1;
-		let acc=0;
-		contents.forEach(
-			(line) => {
-				let g = buildAGame(line, count)
-				acc = acc + g.findIfNoViolation(12,13,14)
-				count = count+1
-			}
-		)
-		return acc
-	}
-
-	function solve2(contents){
-		let acc=0
-		contents.forEach(
-			(line) => {
-				let g = buildAGame(line)
-				acc = acc + g.findSmallestNeededCube().reduce((prev, curr) => prev*curr)
-			}
-		)
-		return acc
-	}
-</script>
+<script id="Day2" defer src="websitescripts/day2.js"></script>
 </br>
 
 <h2> Day 3 </h2>
@@ -248,110 +82,7 @@
 <p id="outd3.1"> Result for Part 1  will appear here</p>
 <p id="outd3.2"> Result for Part 2 will appear here</p>
 
-<script id="Day3" defer>
-	const inputElementd3 = document.getElementById("inputd3.1");
-	const outputElementd3p1 = document.getElementById("outd3.1");
-	const outputElementd3p2 = document.getElementById("outd3.2");
-
-	inputElementd3.addEventListener("change", eventListenerDay3, false);
-	function eventListenerDay3() {
-		let reader = new FileReader();
-		reader.onload = function () {
-			const arr = reader.result.split(/\r?\n/);
-			outputElementd3p1.textContent = solverd3p1(arr);
-			outputElementd3p2.textContent = solverd3p2(arr);
-		}
-		reader.readAsText(this.files[0]);
-	}
-	/*****************************************************************************/
-
-
-	const input = "day3-input.txt";
-	const testinput = "day3-test.txt";
-	function elemToNumpos(elem) {
-		return { actualNum: Number(elem[0]), begin: Number(elem["index"]), end: Number(elem["index"]) + elem[0].length - 1 };
-	}
-	function solverd3p1(lines) {
-		let numsPos = new Set();
-		const regNum = /\d+/g;
-		const regSym = /[^\d\.]/g;
-		for (let linenumber = 1; linenumber < lines.length; linenumber = linenumber + 1) {
-			const scan1 = lines[linenumber - 1];
-			const scan2 = lines[linenumber];
-			const nums1 = [...scan1.matchAll(regNum)].map((elem) => { return elemToNumpos(elem); });
-			const syms1 = [...scan1.matchAll(regSym)].map((elem) => { return { position: Number(elem["index"]) }; });
-			const nums2 = [...scan2.matchAll(regNum)].map((elem) => { return elemToNumpos(elem); });
-			const syms2 = [...scan2.matchAll(regSym)].map((elem) => { return { position: Number(elem["index"]) }; });
-			syms1.forEach((sp) => {
-				for (let num of nums2) {
-					if (sp.position >= num.begin - 1 && sp.position <= num.end + 1) {
-						numsPos.add({ linenum: linenumber, linepositions: num });
-					}
-				}
-				for (let num of nums1) {
-					if (sp.position == num.end + 1 || sp.position == num.begin - 1) {
-						numsPos.add({ linenum: linenumber - 1, linepositions: num });
-					}
-				}
-			});
-			syms2.forEach((sp) => {
-				for (let num of nums1) {
-					if (sp.position >= num.begin - 1 && sp.position <= num.end + 1) {
-						numsPos.add({ linenum: linenumber - 1, linepositions: num });
-					}
-				}
-			});
-		}
-		return [...new Set([...numsPos]
-				.map((item) => item.linepositions.actualNum + "|" + item.linenum + "|" + item.linepositions.begin + "|" + item.linepositions.end))]
-			.map((str) => Number(str.match(/\d+/)))
-			.reduce((a, b) => a + b);
-	}
-	function solverd3p2(lines) {
-		let numsPos = new Set();
-		const regNum = /\d+/g;
-		const regGear = /\*/g;
-		for (let linenumber = 1; linenumber < lines.length; linenumber = linenumber + 1) {
-			const scan1 = lines[linenumber - 1];
-			const scan2 = lines[linenumber];
-			const nums1 = [...scan1.matchAll(regNum)].map((elem) => { return elemToNumpos(elem); });
-			const gear1 = [...scan1.matchAll(regGear)].map((elem) => { return { gearposition: Number(elem["index"]), gearlinenum: linenumber - 1 }; });
-			const nums2 = [...scan2.matchAll(regNum)].map((elem) => { return elemToNumpos(elem); });
-			const gear2 = [...scan2.matchAll(regGear)].map((elem) => { return { gearposition: Number(elem["index"]), gearlinenum: linenumber }; });
-			gear1.forEach((sp) => {
-				for (let num of nums2) {
-					if (sp.gearposition >= num.begin - 1 && sp.gearposition <= num.end + 1) {
-						numsPos.add({ linenum: linenumber, linepositions: Object.assign(Object.assign({}, num), sp) });
-					}
-				}
-				for (let num of nums1) {
-					if (sp.gearposition == num.end + 1 || sp.gearposition == num.begin - 1) {
-						numsPos.add({ linenum: linenumber - 1, linepositions: Object.assign(Object.assign({}, num), sp) });
-					}
-				}
-			});
-			gear2.forEach((sp) => {
-				for (let num of nums1) {
-					if (sp.gearposition >= num.begin - 1 && sp.gearposition <= num.end + 1) {
-						numsPos.add({ linenum: linenumber - 1, linepositions: Object.assign(Object.assign({}, num), sp) });
-					}
-				}
-			});
-		}
-		let gearmap = new Map();
-		const bullshit = (a, b) => { return a + '|' + b; };
-		for (let l of [...numsPos]) {
-			const key = bullshit(l.linepositions.gearlinenum, l.linepositions.gearposition);
-			if (gearmap.has(key)) {
-				gearmap.get(key).push(l.linepositions.actualNum);
-			}
-			else {
-				gearmap.set(key, [l.linepositions.actualNum]);
-			}
-		}
-		return [...gearmap].map((el) => el[1].length == 2 ? el[1].reduce((a, b) => a * b) : 0).reduce((a, b) => a + b);
-	}
-</script>
+<script id="Day3" defer src="websitescripts/day3.js"></script>
 
 <br/>
 <h2> Day 4 </h2>
@@ -367,63 +98,7 @@
 <p id="outd4.1"> Result for Part 1  will appear here</p>
 <p id="outd4.2"> Result for Part 2 will appear here</p>
 
-<script id="Day4" defer>
-	const inputElementd4 = document.getElementById("inputd4.1");
-	const outputElementd4p1 = document.getElementById("outd4.1");
-	const outputElementd4p2 = document.getElementById("outd4.2");
-
-	inputElementd4.addEventListener("change", eventListenerDay4, false);
-	function eventListenerDay4() {
-		let reader = new FileReader();
-		reader.onload = function () {
-			const arr = reader.result.split(/\r?\n/);
-			outputElementd4p1.textContent = solverd4p1(arr);
-			outputElementd4p2.textContent = solverd4p2(arr);
-		}
-		reader.readAsText(this.files[0]);
-	}
-	/*****************************************************************************/
-
-	function numberOfWinningNumbers(line) {
-		var _a;
-		const reg = /(?<winnums>(\d+|\s)+)\|(?<mynums>(\d+|\s)+)/;
-		const numreg = /\d+/g;
-		let groups = (_a = line.match(reg)) === null || _a === void 0 ? void 0 : _a.groups;
-		if (groups) {
-			const win = new Set([...groups["winnums"].matchAll(numreg)].map((e) => Number(e)));
-			const my = new Set([...groups["mynums"].matchAll(numreg)].map((e) => Number(e)));
-			return (([...win].filter(x => my.has(x)).length));
-		}
-		return 0;
-	}
-	function solverd4p1(lines) {
-		const pointCalc = (num) => num > 0 ? Math.pow(2, num - 1) : 0;
-		const points = [];
-		for (let line of lines) {
-			points.push(numberOfWinningNumbers(line));
-		}
-		return points.reduce((acc, curr) => acc + pointCalc(curr), 0);
-	}
-	function solverd4p2(lines) {
-		const card_repeat = new Map();
-		for (let e of lines.entries()) {
-			if (!card_repeat.has(e[0])) {
-				card_repeat.set(e[0], 1);
-			}
-			const how_often_to_count_card = card_repeat.get(e[0]);
-			const numofwinnum = numberOfWinningNumbers(e[1]);
-			for (let i of [...Array(numofwinnum).keys()]) {
-				if (card_repeat.has(e[0] + i + 1)) {
-					card_repeat.set(e[0] + i + 1, card_repeat.get(e[0] + i + 1) + how_often_to_count_card);
-				}
-				else {
-					card_repeat.set(e[0] + i + 1, how_often_to_count_card + 1);
-				}
-			}
-		}
-		return [...card_repeat.values()].reduce((a, b) => a + b);
-	}
-</script>
+<script id="Day4" defer src="websitescripts/day4.js"></script>
 
 <br/>
 <h2> Day 5 </h2>
@@ -452,6 +127,57 @@
 <input type="file" id="inputd6.1"/>
 <p id="outd6.1"> Result for Part 1  will appear here</p>
 <p id="outd6.2"> Result for Part 2 will appear here</p>
+
+<script id="Day6" defer src="websitescripts/day6.js"></script>
+
+<br/>
+<h2> Day 7 </h2>
+<p> 
+	I got to use enums, so at least I now know a bit about how they work in Typescript.
+	I made a lot of stupid mistakes esp. during part 2 which lead to wrongly sorted lists and confusion.
+	At least I did implement the smart solution for day 6, so there's that.
+</p>
+
+<p>Please insert a text file below to get the (hopefully correct) results</p>
+<input type="file" id="inputd7.1"/>
+<p id="outd7.1"> Result for Part 1  will appear here</p>
+<p id="outd7.2"> Result for Part 2 will appear here</p>
+
+<script id="Day7" defer src="websitescripts/day7.js"></script>
+
+
+<br/>
+<h2> Day 8 </h2>
+<p> 
+	The first part was easy, the second needed me to use my brain power.
+	At first I tried the dumb aproach for part 2, after about 20 minutes of my programm running I stopped it and used a smarter one.
+	Initially I worried about having to deal with multiple cycles per start-word, but all of them are a multiple of the navigation-instruction length so all was gucci.
+	Still need to implementd day 5 part 2 in the smart way ...
+</p>
+
+<p>Please insert a text file below to get the (hopefully correct) results</p>
+<input type="file" id="inputd8.1"/>
+<p id="outd8.1"> Result for Part 1  will appear here</p>
+<p id="outd8.2"> Result for Part 2 will appear here</p>
+
+<script id="Day8" defer src="websitescripts/day8.js"></script>
+
+
+<br/>
+<h2> Day 9 </h2>
+<p> 
+	Possibly the fastest day so far, no othe hidden problems but negative numbers (so I had to use a slightly different regex than usually).
+	Implementing part 2 just took one `reverse()` of a list; I am quite happy that I did not need to think more about it.
+	Also I now added the scripts for day 6-9 to this site; day 5 is going to wait until I figure out what I am doing wrong.
+</p>
+
+<p>Please insert a text file below to get the (hopefully correct) results</p>
+<input type="file" id="inputd9.1"/>
+<p id="outd9.1"> Result for Part 1  will appear here</p>
+<p id="outd9.2"> Result for Part 2 will appear here</p>
+
+<script id="Day9" defer src="websitescripts/day9.js"></script>
+
 
 </body>
 </html>
